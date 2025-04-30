@@ -1,4 +1,7 @@
 streamlit
-bokeh
 pandas
 numpy
+bokeh
+plotly
+scikit-learn
+
