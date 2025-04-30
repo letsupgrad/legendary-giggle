@@ -3,10 +3,12 @@ import pandas as pd
 import plotly.express as px
 from sklearn import datasets
 from bokeh.plotting import figure
-from bokeh.io import output_file, show
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import plotly.graph_objs as go
+from dash import Input, Output
+from streamlit.components.v1 import html
 
 # Load Iris dataset
 iris = datasets.load_iris()
@@ -31,26 +33,40 @@ p = figure(title="Bokeh Scatter Plot", x_axis_label='Sepal Length (cm)', y_axis_
 p.scatter(df["sepal length (cm)"], df["sepal width (cm)"], legend_field="species", size=8, color="red", alpha=0.5)
 st.bokeh_chart(p)
 
-# Dash Integration (in Streamlit)
+# Dash App Integration
 st.subheader("Dash Interactive Plot")
+
 # Start a Dash app inside Streamlit
 app = dash.Dash(__name__)
+
+# Define the layout of the Dash app
 app.layout = html.Div([
     html.H1("Dash Plot: Sepal Length vs Sepal Width"),
     dcc.Graph(
         id='scatter-plot',
-        figure=px.scatter(df, x="sepal length (cm)", y="sepal width (cm)", color="species").update_layout(title="Dash Plot of Iris Dataset")
+        figure=go.Figure(
+            data=[go.Scatter(
+                x=df['sepal length (cm)'],
+                y=df['sepal width (cm)'],
+                mode='markers',
+                marker=dict(color='blue'),
+                text=df['species']
+            )],
+            layout=go.Layout(
+                title="Dash Plot of Iris Dataset",
+                xaxis=dict(title="Sepal Length (cm)"),
+                yaxis=dict(title="Sepal Width (cm)")
+            )
+        )
     )
 ])
 
-# Run Dash app using Streamlit components
-from streamlit.components.v1 import html
-app.run_server(debug=False, use_reloader=False)
+# Run Dash App in the background and embed it within the Streamlit app
+def run_dash():
+    app.run_server(debug=False, use_reloader=False, port=8051)
 
-# Display Button to reload Streamlit app
-st.write("Click to reload the Streamlit App")
-if st.button("Reload"):
-    st.experimental_rerun()
+# Using Streamlit component to run the Dash app in the background
+html("<div id='dash-container'></div><script src='http://127.0.0.1:8051'></script>")
 
 # Footer Information
 st.markdown("---")
