@@ -7,6 +7,7 @@ from bokeh.plotting import figure
 from bokeh.transform import cumsum
 from bokeh.palettes import Category10
 from math import pi
+from bokeh.models import ColumnDataSource
 
 # Load sample data
 iris = load_iris(as_frame=True)
@@ -60,7 +61,6 @@ elif chart_type == "Bokeh Area Chart":
     p.varea(x=x, y1=0, y2=y, fill_color="skyblue", alpha=0.6)
     st.bokeh_chart(p)
 
-from bokeh.models import ColumnDataSource
 
 elif chart_type == "Bokeh Pie Chart":
     counts = df["target"].value_counts()
