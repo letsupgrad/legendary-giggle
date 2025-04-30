@@ -1,9 +1,16 @@
-streamlit==1.15.0
-dash==2.9.0  # Downgrade Dash to a version compatible with dash-core-components
-dash-core-components==2.9.0  # This should match with the dash version
-dash-html-components==2.9.0
-plotly==5.6.0
-bokeh==2.4.3
-scikit-learn==1.1.2
-pandas==1.5.3
+# requirements.txt
 
+# Core web application framework
+streamlit
+
+# Data manipulation and analysis
+pandas
+
+# Interactive plotting library
+plotly
+
+# Machine learning library (used here for loading the Iris dataset)
+scikit-learn
+
+# Interactive plotting library
+bokeh
