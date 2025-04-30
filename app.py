@@ -60,17 +60,31 @@ elif chart_type == "Bokeh Area Chart":
     p.varea(x=x, y1=0, y2=y, fill_color="skyblue", alpha=0.6)
     st.bokeh_chart(p)
 
+from bokeh.models import ColumnDataSource
+
 elif chart_type == "Bokeh Pie Chart":
     counts = df["target"].value_counts()
     pie_data = pd.Series(counts, index=iris.target_names).reset_index(name='value')
     pie_data.columns = ['species', 'value']
     pie_data['angle'] = pie_data['value'] / pie_data['value'].sum() * 2 * pi
     pie_data['color'] = Category10[len(pie_data)]
-    p = figure(height=400, title="Bokeh Pie Chart", toolbar_location=None, tools="hover", tooltips="@species", x_range=(-0.5, 1.0))
-    p.wedge(x=0, y=1, radius=0.4, start_angle=cumsum('angle', include_zero=True), end_angle=cumsum('angle'),
-            line_color="white", fill_color='color', legend_field='species', source=pie_data)
+
+    source = ColumnDataSource(pie_data)
+
+    p = figure(height=400, title="Bokeh Pie Chart", toolbar_location=None,
+               tools="hover", tooltips="@species: @value", x_range=(-0.5, 1.0))
+    
+    p.wedge(x=0, y=1, radius=0.4,
+            start_angle=cumsum('angle', include_zero=True),
+            end_angle=cumsum('angle'),
+            line_color="white", fill_color='color',
+            legend_field='species', source=source)
+
     p.axis.visible = False
+    p.grid.visible = False
+
     st.bokeh_chart(p)
+
 
 elif chart_type == "Bokeh Histogram":
     hist_data = df["petal length (cm)"]
